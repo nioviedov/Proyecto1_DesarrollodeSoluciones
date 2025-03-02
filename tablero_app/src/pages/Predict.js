@@ -3,11 +3,70 @@ import { useState } from "react";
 function Predict() {
   // Estado para los inputs
   const [formData, setFormData] = useState({
+    select_questions: [
+      {
+        question: 'GenHlth',
+        text_question: '¿Cómo calificaría su estado general de salud?',
+        options: [
+          { option: '1', text_option: 'Excelente' },
+          { option: '2', text_option: 'Muy bueno' },
+          { option: '3', text_option: 'Bueno' },
+          { option: '4', text_option: 'Regular' },
+          { option: '5', text_option: 'Malo' }
+        ],
+        answer: ''
+      },
+      {
+        question: 'Age',
+        text_question: '¿Cuál es su rango de edad?',
+        options: [
+          { option: '1', text_option: 'Menos de 18 años' },
+          { option: '2', text_option: '18-24 años' },
+          { option: '3', text_option: '25-34 años' },
+          { option: '4', text_option: '35-44 años' },
+          { option: '5', text_option: '45 años o más' }
+        ],
+        answer: ''
+      },
+      {
+        question: 'Education',
+        text_question: '¿Cuál es su nivel educativo más alto alcanzado?',
+        options: [
+          { option: '1', text_option: 'Sin estudios' },
+          { option: '2', text_option: 'Educación primaria' },
+          { option: '3', text_option: 'Educación secundaria' },
+          { option: '4', text_option: 'Educación universitaria' },
+          { option: '5', text_option: 'Postgrado' }
+        ],
+        answer: ''
+      },
+      {
+        question: 'Income',
+        text_question: '¿Cuál es su nivel de ingresos mensuales?',
+        options: [
+          { option: '1', text_option: 'Menos de $500' },
+          { option: '2', text_option: '$500 - $1000' },
+          { option: '3', text_option: '$1000 - $2000' },
+          { option: '4', text_option: '$2000 - $5000' },
+          { option: '5', text_option: 'Más de $5000' }
+        ],
+        answer: ''
+      }
+    ],
     binary_questions: [
-      {question:'HighBP',text_question:'¿Tiene high BP?',answer:'',help_text:''},
-      {question:'HighChol',answer:'',help_text:''},
-      {question:'CholCheck,',answer:'',help_text:''},
-      {question:'Smoker',answer:'',help_text:''},
+      { question: 'HighBP', text_question: '¿Tiene presión arterial alta?', answer: '', help_text: '' },
+      { question: 'HighChol', text_question: '¿Tiene colesterol alto?', answer: '', help_text: '' },
+      { question: 'CholCheck', text_question: '¿Se ha realizado un chequeo de colesterol en el último año?', answer: '', help_text: '' },
+      { question: 'Smoker', text_question: '¿Fuma?', answer: '', help_text: '' },
+      { question: 'Stroke', text_question: '¿Ha sufrido un derrame cerebral?', answer: '', help_text: '' },
+      { question: 'HearthDiseaseOrAttack', text_question: '¿Ha tenido una enfermedad cardíaca o ataque al corazón?', answer: '', help_text: '' },
+      { question: 'PhysActivity', text_question: '¿Realiza actividad física regularmente?', answer: '', help_text: '' },
+      { question: 'Fruits', text_question: '¿Consume frutas diariamente?', answer: '', help_text: '' },
+      { question: 'Veggies', text_question: '¿Consume vegetales diariamente?', answer: '', help_text: '' },
+      { question: 'HvyAlcoholConsump', text_question: '¿Consume alcohol en grandes cantidades?', answer: '', help_text: '' },
+      { question: 'AnyHealthcare', text_question: '¿Tiene acceso a atención médica?', answer: '', help_text: '' },
+      { question: 'NoDocbcCost', text_question: '¿Ha evitado ir al médico por el costo?', answer: '', help_text: '' },
+      { question: 'DiffWalk', text_question: '¿Tiene dificultades para caminar?', answer: '', help_text: '' }
     ],
     select1: "",
     select2: "",
@@ -35,7 +94,21 @@ function Predict() {
     console.log("Datos del formulario:", formData);
   };
 
-  const handleChangeBinaryQuestion = (question,answer) =>{
+  const getRecommendation = (percentage) => {
+    if (percentage < 0.2) {
+      return "Tu riesgo de diabetes es muy bajo. Mantén un estilo de vida saludable.";
+    } else if (percentage < 0.4) {
+      return "Tu riesgo de diabetes es bajo. Continúa con hábitos saludables y revisa tu estado de salud periódicamente.";
+    } else if (percentage < 0.6) {
+      return "Tu riesgo de diabetes es medio. Considera mejorar tu alimentación y aumentar la actividad física.";
+    } else if (percentage < 0.8) {
+      return "Tu riesgo de diabetes es alto. Es recomendable hacer chequeos médicos y mejorar tu estilo de vida.";
+    } else {
+      return "Tu riesgo de diabetes es muy alto. Consulta con un médico lo antes posible.";
+    }
+  };
+
+  const handleChangeBinaryQuestion = (question, answer) => {
 
     setFormData((prev) => ({
       ...prev,
@@ -46,15 +119,33 @@ function Predict() {
   }
 
   const getClassName = (percentage) => {
-    console.log('dd',percentage)
+    console.log('dd', percentage)
     if (percentage < 0.3) {
-      return 'bg-red-600';
+      return 'bg-green-600'
     }
     else if (percentage < 0.8) {
       return 'bg-yellow-600'
     }
     else {
-      return 'bg-green-600'
+      return 'bg-red-600';
+    }
+  }
+
+  const getNivelDeRiesgo = (percentage) =>{
+    if(percentage < .20){
+      return 'Muy bajo'
+    }
+    else if(percentage < .40){
+      return 'Bajo'
+    }
+    else if(percentage < .60){
+      return 'Medio'
+    }
+    else if(percentage < .80){
+      return 'Alto'
+    }
+    else{
+      return 'Muy Alto'
     }
   }
 
@@ -62,98 +153,68 @@ function Predict() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-6xl grid grid-cols-2 gap-6">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-full grid grid-cols-2 gap-6">
         {/* Columna izquierda (formulario) - 50% del ancho */}
         <div className="bg-gray-50 p-6 rounded-lg shadow">
           <h2 className="text-2xl font-semibold mb-6">Formulario de Predicción</h2>
-          <form className="grid grid-cols-2 gap-6" onSubmit={handleSubmit}>
+          <form className="grid grid-cols-3 gap-6" onSubmit={handleSubmit}>
             {/* Select 1 */}
-            <div>
-              <label className="block text-gray-700">Seleccione una opción 1</label>
-              <select
-                name="select1"
-                value={formData.select1}
-                onChange={handleChange}
-                className="w-full p-2 border rounded-lg"
-              >
-                <option value="">Seleccione...</option>
-                <option value="opcion1">Opción 1</option>
-                <option value="opcion2">Opción 2</option>
-              </select>
-            </div>
+            {formData.select_questions.map((question, index) => (
+
+              <div>
+                <label className="block text-gray-700">{question.text_question ? question.text_question : question.question}</label>
+                <select
+                  name={question.question}
+                  value={formData.select1}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg"
+                >
+                  <option value="">Seleccione...</option>
+                  {question.options.map((option, index2) => (
+                    <option value={option.option}>{option.text_option ? option.text_option : option.option}</option>
+                  ))}
+                  {/* <option value="opcion1">Opción 1</option>
+                <option value="opcion2">Opción 2</option> */}
+                </select>
+              </div>
+            ))}
             {formData.binary_questions.map((question, index) => (
 
-            <div key={question.question} className="flex flex-col">
-            <label className="font-medium">{question.question}</label>
-            {/* <label className="font-medium">{question.answer}</label> */}
-            <div className="flex gap-4 mt-2">
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name={`question${index + 1}`}
-                  value="si"
-                  checked={question.answer === "si"}
-                  onChange={()=>{handleChangeBinaryQuestion(question.question,'si')}}
-                  className="w-4 h-4"
-                />
-                Sí
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name={`question${index + 1}`}
-                  value="no"
-                  checked={question.answer === "no"}
-                  onChange={()=>{handleChangeBinaryQuestion(question.question,'no')}}
-                  className="w-4 h-4"
-                />
-                No
-              </label>
-            </div>
-          </div>
+              <div key={question.question} className="flex flex-col">
+                <label className="font-medium">{question.text_question ? question.text_question : question.question}</label>
+                {/* <label className="font-medium">{question.answer}</label> */}
+                <div className="flex gap-4 mt-2">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name={`question${index + 1}`}
+                      value="si"
+                      checked={question.answer === "si"}
+                      onChange={() => { handleChangeBinaryQuestion(question.question, 'si') }}
+                      className="w-4 h-4"
+                    />
+                    Sí
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name={`question${index + 1}`}
+                      value="no"
+                      checked={question.answer === "no"}
+                      onChange={() => { handleChangeBinaryQuestion(question.question, 'no') }}
+                      className="w-4 h-4"
+                    />
+                    No
+                  </label>
+                </div>
+              </div>
             ))}
 
             {/* Select 2 */}
-            <div>
-              <label className="block text-gray-700">Altura(cm)</label>
-              <input type="number"></input>
-              <label className="block text-gray-700">Peso(kg)</label>
-              <input type="number"></input>
-              {/* <select
-                name="select2"
-                value={formData.select2}
-                onChange={handleChange}
-                className="w-full p-2 border rounded-lg"
-              >
-                <option value="">Seleccione...</option>
-                <option value="opcionA">Opción A</option>
-                <option value="opcionB">Opción B</option>
-              </select> */}
-            </div>
 
             {/* Checkbox 1 */}
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                name="checkbox1"
-                checked={formData.checkbox1}
-                onChange={handleChange}
-                className="h-5 w-5 text-blue-500"
-              />
-              <label className="text-gray-700">Opción de verificación 1</label>
-            </div>
 
             {/* Checkbox 2 */}
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                name="checkbox2"
-                checked={formData.checkbox2}
-                onChange={handleChange}
-                className="h-5 w-5 text-blue-500"
-              />
-              <label className="text-gray-700">Opción de verificación 2</label>
-            </div>
 
             {/* Botón de Enviar (ocupa 2 columnas) */}
             <div className="col-span-2">
@@ -173,11 +234,14 @@ function Predict() {
             <div className="flex flex-row justify-between w-full">
               <div className={`${getClassName(prediction.diabetes_percentage)} w-80 m-2 p-4`}>
 
-                <span>Diabetes</span>
+                <span>{getNivelDeRiesgo(prediction.diabetes_percentage)}</span>
               </div>
               <span className="m-4">{prediction.diabetes_percentage * 100}%</span>
             </div>
-            <div className="flex flex-row justify-between w-full">
+            <div className="mt-4 p-4 bg-blue-100 border border-blue-500 text-blue-700 rounded-lg">
+          <p>{getRecommendation(prediction.diabetes_percentage)}</p>
+        </div>
+            {/* <div className="flex flex-row justify-between w-full">
               <div className={`${getClassName(prediction.prediabetes_percentage)} w-80 m-2 p-4`}>
                 <span>Pre Diabetes</span>
               </div>
@@ -188,7 +252,7 @@ function Predict() {
                 <span>No diabetes</span>
               </div>
               <span className="m-4">{prediction.nodiabetes_percentage * 100}%</span>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

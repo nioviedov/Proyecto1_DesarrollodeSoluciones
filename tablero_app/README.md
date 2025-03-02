@@ -1,3 +1,10 @@
+# Correr el tablero como html
+
+```
+cd build
+python3 -m http.server 8000
+```
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
