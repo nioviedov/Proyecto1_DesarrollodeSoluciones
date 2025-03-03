@@ -73,7 +73,7 @@ function History() {
   <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-full grid grid-cols-2 gap-6">
     {/* Columna izquierda (formulario) - 50% del ancho */}
     <div className="bg-gray-50 p-6 rounded-lg shadow">
-      <h2 className="text-2xl font-semibold mb-6">Hisotrico</h2>
+      <h2 className="text-2xl font-semibold mb-6">Historico de Predicciones</h2>
       <div className="overflow-y-auto max-h-60">
             <table className="w-full border-collapse border border-gray-300">
               <thead>
@@ -99,7 +99,7 @@ function History() {
             </table>
           </div>
           <div className="mt-6">
-            <h2 className="text-xl font-semibold mb-4">Evolución de Variables</h2>
+            <h2 className="text-xl font-semibold mb-4">Evolución del nivel del riesgo</h2>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={historicoData}>
                 <CartesianGrid strokeDasharray="3 3" />
