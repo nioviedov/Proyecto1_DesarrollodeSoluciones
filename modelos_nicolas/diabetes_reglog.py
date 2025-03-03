@@ -32,17 +32,17 @@ experiment = mlflow.set_experiment('diabetes-reglog')
 
 with mlflow.start_run(experiment_id=experiment.experiment_id):
 
-    c = 1.0
+    C = 1.0
     solver = 'newton-cg' # newton-cg, lbfgs, liblinear
     class_weight = None
     random_state = 42
     
-    model = LogisticRegression(c=c, solver=solver, class_weight=class_weight, random_state=random_state)
+    model = LogisticRegression(C=C, solver=solver, class_weight=class_weight, random_state=random_state)
     model.fit(X_train, y_train)
     
     y_pred = model.predict(X_test)
   
-    mlflow.log_param('c', c)
+    mlflow.log_param('C', C)
     mlflow.log_param('solver', solver)
     mlflow.log_param('class_weight', class_weight)
   
