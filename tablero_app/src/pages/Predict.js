@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import axios from "axios";
 function Predict() {
   // Estado para los inputs
   const [formData, setFormData] = useState({
@@ -92,6 +92,11 @@ function Predict() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Datos del formulario:", formData);
+    axios.post('http://localhost:8000/save_prediction',formData).then(res=>{
+      console.log(res.data)
+    }).catch(err=>{
+      console.log('ERROR',err)
+    })
   };
 
   const getRecommendation = (percentage) => {

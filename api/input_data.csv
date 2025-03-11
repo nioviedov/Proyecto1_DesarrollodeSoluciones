@@ -1,0 +1,5 @@
+UserID,HighBP,HighChol,CholCheck,Smoker,Stroke,HearthDiseaseOrAttack,PhysActivity,Fruits,Veggies,HvyAlcoholConsump,AnyHealthcare,NoDocbcCost,DiffWalk,GenHlth,Age,Education,Income,Sex,Weight,Height,MentHlth,PhysHlth,user_id,prediction,BMI,prediction_risk
+user_1,1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,1,70,1.85,2,2,user_1,0.2,20.45,1
+user_1,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,1,70,1.85,2,2,user_1,0.2,20.45,1
+user_1,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,1,70,1.85,2,2,user_1,0.2,20.45,1
+user_1,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,1,70,1.75,2,2,user_1,0.2,22.86,3
