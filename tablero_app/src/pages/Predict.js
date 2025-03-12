@@ -1,8 +1,65 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import axios from "axios";
+import API_URL from "../environment"
+
+
 function Predict() {
   // Estado para los inputs
+  useEffect(() => {
+    fillQuestions()
+    if(!localStorage.getItem('username')){
+
+      const valor = window.prompt("Ingresa tu nombre:");
+      if (valor) {
+        localStorage.setItem('username',valor)
+      }
+    }
+  }, []); // Se ejecuta solo una vez al montar el componente
+  
+  const fillQuestions = ()=>{
+    setFormData((prev) => ({
+      ...prev,
+      sex:{...prev.sex,answer:'1'},
+      weight:{...prev.weight,answer:'1'},
+      height:{...prev.height,answer:'1'},
+      mentHlth:{...prev.mentHlth,answer:'1'},
+      physHlth:{...prev.physHlth,answer:'1'},
+      select_questions:prev.select_questions.map((elem) =>
+      ({...elem,answer:'1'})
+    ),
+      binary_questions: prev.binary_questions.map((elem) =>
+         ({ ...elem, answer:'no' })
+      ),
+    }));
+    
+  }
+
   const [formData, setFormData] = useState({
+    sex:{
+      question:'Sex',
+      text_question:'Sexo',
+      answer:''
+    },
+    weight:{
+      question:'Weight',
+      text_question:'Peso',
+      answer:''
+    },
+    height:{
+      question:'Height',
+      text_question:'Altura',
+      answer:''
+    },
+    mentHlth:{
+      question:'MentHlth',
+      text_question:'mentHlth',
+      answer:''
+    },
+    physHlth:{
+      question:'PhysHlth',
+      text_question:'physHlth',
+      answer:''
+    },
     select_questions: [
       {
         question: 'GenHlth',
@@ -89,10 +146,32 @@ function Predict() {
   };
 
   // Manejo del submit
+
+  const getData = ()=>{
+    console.log('iii')
+    let res = {}
+    const dict_bin_questions = {'si':1,'no':0}
+    for(let i = 0;i<formData.binary_questions.length;i++){
+      console.log('LL99')
+      res[formData.binary_questions[i].question] = dict_bin_questions[formData.binary_questions[i].answer];
+    }
+    console.log('ll',formData.select_questions.length)
+    for(let i=0;i<formData.select_questions.length;i++){
+      console.log('AAAUU',i)
+     res[formData.select_questions[i].question] = formData.select_questions[i].answer
+    }
+    res['Sex'] = formData.sex.answer;
+    res['Weight'] = formData.weight.answer;
+    res['Height'] = (parseInt( formData.height.answer)/100.0).toString();
+    res['PhysHlth'] = formData.physHlth.answer;
+    res['MentHlth'] = formData.mentHlth.answer;
+    return res;
+  }
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Datos del formulario:", formData);
-    axios.post('http://localhost:8000/save_prediction',formData).then(res=>{
+    let data = getData()
+    axios.post(`${API_URL}/save_prediction`,data).then(res=>{
       console.log(res.data)
     }).catch(err=>{
       console.log('ERROR',err)
@@ -121,6 +200,19 @@ function Predict() {
         elem.question === question ? { ...elem, answer } : elem
       ),
     }));
+  }
+  const handleChangeSex = (answer)=>{
+    setFormData((prev)=>({
+      ...prev,
+      sex:{...prev.sex,answer:answer}
+    }))
+  }
+
+  const handleChangeInput = (field,answer) =>{
+    setFormData((prev)=>({
+      ...prev,
+      [field]:{...prev[field],answer:answer}
+    }))
   }
 
   const getClassName = (percentage) => {
@@ -163,6 +255,59 @@ function Predict() {
         <div className="bg-gray-50 p-6 rounded-lg shadow">
           <h2 className="text-2xl font-semibold mb-6">Formulario de Predicción</h2>
           <form className="grid grid-cols-3 gap-6" onSubmit={handleSubmit}>
+
+{/* Sex */}
+          <div className="flex flex-col">
+                <label className="font-medium">Sexo</label>
+                {/* <label className="font-medium">{question.answer}</label> */}
+                <div className="flex gap-4 mt-2">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name={`Sex`}
+                      value="si"
+                      checked={formData.sex.answer === "0"}
+                      onChange={() => { handleChangeSex( '0') }}
+                      className="w-4 h-4"
+                    />
+                    Hombre
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name={`Sex`}
+                      value="no"
+                      checked={formData.sex.answer === "1"}
+                      onChange={() => { handleChangeSex( '1') }}
+                      className="w-4 h-4"
+                    />
+                    Mujer
+                  </label>
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <label className="font-medium">Peso(kg)</label>
+                <input type="number" onChange={(e)=>handleChangeInput('weight',e.target.value)} value={formData.weight.answer}  />
+                </div>
+                <div className="flex flex-col">
+                <label className="font-medium">Altura(cm)</label>
+                <input type="number" onChange={(e)=>handleChangeInput('height',e.target.value)} value={formData.height.answer}  />
+                </div>
+                {/* mentHlth:{...prev.mentHlth,answer:'1'},
+                physHlth:{...prev.physHlth,answer:'1'}, 
+                 max={30} min={0} step={1}*/}
+                <div>
+                <label className="font-medium">Días en los que la salud física no
+                fue buena en los últimos 30 días</label>
+                <input type="number" max={30} min={0} step={1} onChange={(e)=>handleChangeInput('physHlth',e.target.value)} value={formData.physHlth.answer}  />
+                </div>
+                <div className="flex flex-col">
+                <label className="font-medium">Días en los que la salud mental no
+                fue buena en los últimos 30 días</label>
+                <input type="number" max={30} min={0} step={1} onChange={(e)=>handleChangeInput('mentHlth',e.target.value)} value={formData.mentHlth.answer}  />
+                </div>
+
+
             {/* Select 1 */}
             {formData.select_questions.map((question, index) => (
 
@@ -170,7 +315,7 @@ function Predict() {
                 <label className="block text-gray-700">{question.text_question ? question.text_question : question.question}</label>
                 <select
                   name={question.question}
-                  value={formData.select1}
+                  value={question.answer}
                   onChange={handleChange}
                   className="w-full p-2 border rounded-lg"
                 >

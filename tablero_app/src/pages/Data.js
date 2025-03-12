@@ -3,6 +3,10 @@ import axios from "axios";
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Bar, BarChart } from "recharts";
 
+import API_URL from "../environment"
+const data = [
+  { name: "Total", value1: 10, value2: 20, value3: 15, value4: 25, value5: 30 }
+];
 const colors =[
   "#90EE90", // Muy bajo (verde suave)
   "#ADFF2F", // Bajo (verde-amarillento)
@@ -47,25 +51,85 @@ const riegos = [
   
   function Data(){
   useEffect(() => {
-    axios.get("http://localhost:8000/descriptive_data") // Reemplaza con la URL real
-      .then(response => {
-        console.log("Lll",response.data)
-        setDataList(response.data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error("Error fetching data:", error);
-        setError(error);
-        setLoading(false);
-      });
+    getData();
   }, []);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    getData()
+    // onFilter({ fromDate, toDate });
+  };
+  const getData = ()=>{
+    axios.get(`${API_URL}/descriptive_data?from_date=${fromDate}&to_date=${toDate}`) // Reemplaza con la URL real
+    .then(response => {
+      console.log("Lll",response.data)
+      setDataList(response.data);
+      setLoading(false);
+    })
+    .catch(error => {
+      console.error("Error fetching data:", error);
+      setError(error);
+      setLoading(false);
+    });
+  }
+
   const [dataList, setDataList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-    return  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-    {dataList.map((item, index) => (
+  const [fromDate, setFromDate] = useState("");
+
+  const [toDate, setToDate] = useState("");
+    return <div className="m-4">
+      <div className="mt-3">
+      <form onSubmit={handleSubmit} className="flex items-center gap-4 bg-white p-2 rounded-lg shadow">
+      <label className="text-sm text-gray-600">Desde:</label>
+      <input
+        type="date"
+        value={fromDate}
+        onChange={(e) => setFromDate(e.target.value)}
+        className="border rounded px-2 py-1 text-sm"
+      />
+      <label className="text-sm text-gray-600">Hasta:</label>
+      <input
+        type="date"
+        value={toDate}
+        onChange={(e) => setToDate(e.target.value)}
+        className="border rounded px-2 py-1 text-sm"
+      />
+      <button
+        type="submit"
+        className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 text-sm"
+      >
+        Filtrar
+      </button>
+    </form>
+      </div>
+      {dataList.length> 0?
+ <div className="w-full h-96 p-4 bg-white rounded-xl shadow">
+  <h2><storng style={{fontSize:40}}>Total: {dataList[0].total}</storng></h2>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={[{value1:dataList[0].data[0],value2:dataList[0].data[1],value3:dataList[0].data[2],value4:dataList[0].data[3],value5:dataList[0].data[4]}]} layout="vertical" margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+        {/* <BarChart data={{value1:dataList[0].data[0],value2:dataList[0].data[1],value3:dataList[0].data[2],value4:dataList[0].data[3],value5:dataList[0].data[4]}} layout="vertical" margin={{ top: 20, right: 30, left: 20, bottom: 5 }}> */}
+          <XAxis type="number" />
+          <YAxis type="category" dataKey="name" />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="value1" name={'Muy bajo'} stackId="a" fill={colors[0]} />
+          <Bar dataKey="value2" name={'Bajo'} stackId="a" fill={colors[1]} />
+        <Bar dataKey="value3"  name={'Media'}stackId="a" fill={colors[2]} />
+          <Bar dataKey="value4" name={'Alto'} stackId="a" fill={colors[3]} />
+          <Bar dataKey="value5" name={'Muy Alto'} stackId="a" fill={colors[4]} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+
+   :null}
+  {/*  */}
+
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+    {dataList.filter(e=>e.type === 'bar_chart').map((item, index) => (
       <div key={index} className="bg-white shadow-lg rounded-lg p-4">
-        <h2 className="text-lg font-semibold mb-2">{item.title}</h2>
+        <h2 className="text-lg font-semibold mb-2">{item.name}</h2>
         <ResponsiveContainer width="100%" height={250}>
         <BarChart
           width={500}
@@ -93,6 +157,7 @@ const riegos = [
         </ResponsiveContainer>
       </div>
     ))}
+  </div>
   </div>
 }
 

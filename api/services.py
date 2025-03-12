@@ -61,19 +61,39 @@ def get_descriptive_data(storage:Storage):
                      'Fruits','Veggies','HvyAlcoholConsump','AnyHealthcare','NoDocbcCost','DiffWalk','Sex']
     choice_fields = ['GenHlth','Age','Education','Income']
     fields = binary_fields + choice_fields
+    histogram_fields = ['Height','Weight','BMI','MentHlth','PhysHlth']
     options = [[0,1] for i in binary_fields] + [[0,1,2,3,4] for i in choice_fields]
     names_to_show = [['No','Si'] for i in binary_fields] + [['Cat1','Cat2','Cat3','Cat4','Cat5'],['Cat1','Cat2','Cat3','Cat4','Cat5'],['Cat1','Cat2','Cat3','Cat4','Cat5'],['Cat1','Cat2','Cat3','Cat4','Cat5']]
     prediction_risks = [0,1,2,3,4]
+    
     res = []
+    temp = {'type':'total','total':None,'data':[]}
+    for prediction in prediction_risks:
+        temp['data'].append(len(df[df['prediction_risk'] == prediction]))
+    temp['total'] = sum(temp['data'])
+    res.append(temp)
     for index,field in enumerate(fields):
-        temp = {'name':field,'data':[],'prediction_risks':prediction_risks,'names_to_show':names_to_show[index]}
+        temp = {'type':'bar_chart','name':field,'data':[],'prediction_risks':prediction_risks,'names_to_show':names_to_show[index]}
         for index2,option in enumerate(options[index]):
             res_aux = {'name':option,'name_to_show':names_to_show[index][index2]}
             for prediction in prediction_risks:
-                print('***',field,option,prediction)
                 res_aux[prediction] = len(df[(df[field] == option) & (df['prediction_risk'] == prediction)])
             # print('field',field,type(aux),'aux',aux.to_dict())
             temp['data'].append(res_aux)
         res.append(temp)
-    print("LKFDK")
+    for index,field in enumerate(histogram_fields):
+        temp = {'type':'bar_chart','name':field,'data':[],'prediction_risks':prediction_risks,'names_to_show':names_to_show[index]}
+
+        hist = df[field].value_counts(bins=5, sort=False)
+        intervals = hist.index  # Esto devuelve un Index de Intervalos
+        # print('\n\n>>>',intervals)
+        for index2,selected_interval in enumerate(intervals):
+            res_aux = {'name':option,'name_to_show':f'{selected_interval.left} , {selected_interval.right}'}
+
+            for prediction in prediction_risks:
+                res_aux[prediction] = len(df[df[field].between(selected_interval.left, selected_interval.right) & (df['prediction_risk'] == prediction)])
+            temp['data'].append(res_aux)
+        # print('\n\n>>',type(hist),hist.to_dict())
+        res.append(temp)
+    
     return res

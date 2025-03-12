@@ -44,7 +44,6 @@ def get_predictions(user_id: str):
 @app.get("/descriptive_data")
 def descriptive_data():
     res = get_descriptive_data(storage)
-    print('-->',res)
     return jsonable_encoder(res)
 
 
