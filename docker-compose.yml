@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  api:
+    build: ./api
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+    # depends_on:
+    #   - database
+  
+  tablero_app:
+    build: ./tablero_app
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - REACT_APP_API_URL=http://localhost:8000
+    volumes:
+      - ./tablero_app:/app
+      - /app/node_modules  # Evita que node_modules de tu host sobrescriba el del contenedor
+    # depends_on:
+    #   - backend
+
+  # database:
+  #   image: postgres:16
+  #   environment:
+  #     POSTGRES_USER: user
+  #     POSTGRES_PASSWORD: password
+  #     POSTGRES_DB: mydb
+  #   ports:
+  #     - "5432:5432"

@@ -7,21 +7,15 @@ function Predict() {
   // Estado para los inputs
   useEffect(() => {
     fillQuestions()
-    if(!localStorage.getItem('username')){
-
-      const valor = window.prompt("Ingresa tu nombre:");
-      if (valor) {
-        localStorage.setItem('username',valor)
-      }
-    }
+    
   }, []); // Se ejecuta solo una vez al montar el componente
   
   const fillQuestions = ()=>{
     setFormData((prev) => ({
       ...prev,
-      sex:{...prev.sex,answer:'1'},
-      weight:{...prev.weight,answer:'1'},
-      height:{...prev.height,answer:'1'},
+      sex:{...prev.sex,answer:'0'},
+      weight:{...prev.weight,answer:'70'},
+      height:{...prev.height,answer:'175'},
       mentHlth:{...prev.mentHlth,answer:'1'},
       physHlth:{...prev.physHlth,answer:'1'},
       select_questions:prev.select_questions.map((elem) =>
@@ -132,9 +126,7 @@ function Predict() {
   });
 
   const [prediction, setPrediction] = useState({
-    diabetes_percentage: 0.2,
-    prediabetes_percentage: 0.5,
-    nodiabetes_percentage: 0.85,
+    
   })
   // Manejo de cambios en los inputs
   const handleChange = (e) => {
@@ -171,12 +163,32 @@ function Predict() {
     e.preventDefault();
     console.log("Datos del formulario:", formData);
     let data = getData()
-    axios.post(`${API_URL}/save_prediction`,data).then(res=>{
+    axios.post(`${API_URL}/save_prediction?user_id=${localStorage.getItem('username')}`,data).then(res=>{
       console.log(res.data)
+      setPrediction({diabetes_percentage:res.data.prediction.prediction})
+      console.log('kkk',prediction)
     }).catch(err=>{
       console.log('ERROR',err)
     })
   };
+
+  const ClearQuestions = ()=>{
+    setPrediction({})
+    setFormData((prev) => ({
+      ...prev,
+      sex:{...prev.sex,answer:''},
+      weight:{...prev.weight,answer:''},
+      height:{...prev.height,answer:''},
+      mentHlth:{...prev.mentHlth,answer:''},
+      physHlth:{...prev.physHlth,answer:''},
+      select_questions:prev.select_questions.map((elem) =>
+      ({...elem,answer:''})
+    ),
+      binary_questions: prev.binary_questions.map((elem) =>
+         ({ ...elem, answer:'' })
+      ),
+    }));
+  }
 
   const getRecommendation = (percentage) => {
     if (percentage < 0.2) {
@@ -370,9 +382,16 @@ function Predict() {
             <div className="col-span-2">
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition"
+                className="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition"
               >
                 Predecir
+              </button>
+              <button
+                // type="submit"
+                className="bg-blue-600 ml-2 text-white p-3 rounded-lg hover:bg-blue-700 transition"
+                onClick={ClearQuestions}
+              >
+                Limpiar
               </button>
             </div>
           </form>
@@ -381,6 +400,8 @@ function Predict() {
         {/* Columna derecha (resultados) - 50% del ancho */}
         <div className="bg-gray-200 p-6 rounded-lg shadow flex items-between justify-between">
           <div className="flex flex-col w-full ">
+          {prediction.diabetes_percentage?
+          <div>
             <div className="flex flex-row justify-between w-full">
               <div className={`${getClassName(prediction.diabetes_percentage)} w-80 m-2 p-4`}>
 
@@ -390,7 +411,10 @@ function Predict() {
             </div>
             <div className="mt-4 p-4 bg-blue-100 border border-blue-500 text-blue-700 rounded-lg">
           <p>{getRecommendation(prediction.diabetes_percentage)}</p>
+          
         </div>
+</div>
+              :null}
             {/* <div className="flex flex-row justify-between w-full">
               <div className={`${getClassName(prediction.prediabetes_percentage)} w-80 m-2 p-4`}>
                 <span>Pre Diabetes</span>

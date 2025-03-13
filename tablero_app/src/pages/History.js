@@ -37,6 +37,9 @@ function History() {
           if(!elem.date){
             elem.date = '2025-03-11';
           }
+          if(elem.date_time){
+            elem.date = elem.date_time;
+          }
           return elem;
         })
         setHistoricoData(data)

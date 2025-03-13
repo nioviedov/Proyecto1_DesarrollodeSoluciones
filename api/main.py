@@ -28,11 +28,11 @@ app.add_middleware(
 model_manager.add_model("logistic_regression", LogisticRegression())
 
 @app.post("/predict", response_model=PredictionResponse)
-def predict(input_data: PredictionInput, user_id: str='user_1', model_name: str = None):
+def predict(input_data: PredictionInput, user_id: str='user_1', model_name: str = 'mlp'):
     return predict_service(input_data, user_id, model_manager.get_model(model_name))
 
 @app.post("/save_prediction")
-def save_prediction( input_data: PredictionInput,user_id: str='user_1', model_name: str =None):
+def save_prediction( input_data: PredictionInput,user_id: str='user_1', model_name: str ='mlp'):
     # if user_id is None:
     #     user_id = 'user_1'
     return save_prediction_service(user_id, input_data, storage, model_manager.get_model(model_name))

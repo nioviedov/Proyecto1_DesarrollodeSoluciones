@@ -4,6 +4,7 @@ from storage import Storage
 from sklearn.base import BaseEstimator
 import numpy as np
 import pandas as pd
+import datetime
 
 def calculate_bmi(weight: float, height: float) -> float:
     """
@@ -37,7 +38,27 @@ def determinate_risk(p):
 
 def predict_service(input_data: PredictionInput, user_id: str, model: BaseEstimator) -> PredictionResponse:
     features = np.array([[
+        input_data.HighBP,
+        input_data.HighChol,
+        input_data.CholCheck,
+        calculate_bmi(input_data.Weight,input_data.Height),
         input_data.Smoker,
+        input_data.Stroke,
+        input_data.HearthDiseaseOrAttack,
+        input_data.PhysActivity,
+        input_data.Fruits,
+        input_data.Veggies,
+        input_data.HvyAlcoholConsump,
+        input_data.AnyHealthcare,
+        input_data.NoDocbcCost,
+        input_data.GenHlth,
+        input_data.MentHlth,
+        input_data.PhysHlth,
+        input_data.DiffWalk,
+        input_data.Sex,
+        input_data.Age,
+        input_data.Education,
+        input_data.Income,
                           ]])
     prediction = model.predict(features)[0]
     return PredictionResponse(user_id=user_id, prediction=str(prediction))
@@ -48,6 +69,8 @@ def save_prediction_service(user_id: str, input_data: PredictionInput, storage: 
     input_data['BMI'] = calculate_bmi(input_data['Weight'],input_data['Height'])
     prediction = prediction.dict()
     prediction['prediction_risk'] = determinate_risk(prediction['prediction'])
+    input_data['date'] = datetime.date.today()
+    input_data['date_time'] = datetime.datetime.now()
     storage.save(user_id,input_data, prediction)
     return {"message": "Prediction saved","prediction":prediction}
 

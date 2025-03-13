@@ -53,6 +53,11 @@ class CSVSotarge(Storage):
         
         if "UserID" not in df.columns:
             return []
-        
+        print("LL",print(df.dtypes))
+        df['date_time'] = pd.to_datetime(df['date_time'])
+        print("LLa",print(df.dtypes))
+
         user_data = df[df["UserID"] == user_id]
+        user_data = user_data.sort_values(by="date_time", ascending=True)
+        
         return user_data.to_dict(orient="records")
