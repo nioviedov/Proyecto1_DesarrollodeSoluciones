@@ -143,7 +143,6 @@ def get_descriptive_data(storage:Storage,from_date,to_date):
     res.append(temp)
     for index,field in enumerate(fields):
         temp = {'type':'bar_chart','name':field,'data':[],'prediction_risks':prediction_risks,'names_to_show':names_to_show[index]}
-        print('---',index,options,)
         for index2,option in enumerate(options[index]):
             res_aux = {'name':option,'name_to_show':names_to_show[index][index2]}
             for prediction in prediction_risks:
