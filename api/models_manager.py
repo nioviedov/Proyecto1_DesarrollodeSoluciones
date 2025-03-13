@@ -22,7 +22,7 @@ class MyMLPClassifier():
             self.model = pickle.load(file)
     
     def predict(self,data):
-        print('DATA',type(data),data)
+        # print('DATA',type(data),data)
 #         data = [[	1.0,
 # 	1.0,
 # 	1.0,
@@ -45,9 +45,7 @@ class MyMLPClassifier():
 # 	5.0,
 # 	7.0,
 # ]]
-        print('CC',len(data))
         prediction = self.model.predict_proba(data)
-        print('P2PP',prediction)
 
         prediction = [prediction[0][1]]
         return prediction
@@ -61,9 +59,7 @@ class ModelManager:
         self.models[name] = model
     
     def get_model(self, name: str) -> BaseEstimator:
-        print('name model',name)
         if name == 'mlp':
-            print('kkkk')
             return MyMLPClassifier()
         if name not in self.models:
             return FakeModel()

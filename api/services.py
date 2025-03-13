@@ -98,7 +98,7 @@ def get_descriptive_data(storage:Storage,from_date,to_date):
     fields = binary_fields + choice_fields
     histogram_fields = ['Height','Weight','BMI','MentHlth','PhysHlth']
     options = [[0,1] for i in binary_fields] + [[i +1 for i in range(5)]] + [[i +1 for i in range(13)]] + [[i +1 for i in range(6)]] + [[i +1 for i in range(8)]]  
-    names_to_show = [['No','Si'] if i != 'Sex' else ['Hombre','Mujer'] for i in binary_fields] + [
+    names_to_show = [['No','Si'] if i != 'Sex' else ['Mujer','Hombre'] for i in binary_fields] + [
         ['Excelente','Muy bueno','Bueno','Regular','Malo'],
         [
     "18-24 años",
@@ -145,6 +145,7 @@ def get_descriptive_data(storage:Storage,from_date,to_date):
         temp = {'type':'bar_chart','name':field,'data':[],'prediction_risks':prediction_risks,'names_to_show':names_to_show[index]}
         for index2,option in enumerate(options[index]):
             res_aux = {'name':option,'name_to_show':names_to_show[index][index2]}
+            print('-->',field,option)
             for prediction in prediction_risks:
                 res_aux[prediction] = len(df[(df[field] == option) & (df['prediction_risk'] == prediction)])
             # print('field',field,type(aux),'aux',aux.to_dict())

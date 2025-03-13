@@ -72,23 +72,32 @@ function Predict() {
         question: 'Age',
         text_question: '¿Cuál es su rango de edad?',
         options: [
-          { option: '1', text_option: 'Menos de 18 años' },
-          { option: '2', text_option: '18-24 años' },
-          { option: '3', text_option: '25-34 años' },
-          { option: '4', text_option: '35-44 años' },
-          { option: '5', text_option: '45 años o más' }
+          { option: '1', text_option: '18-24 años' },
+          { option: '2', text_option: '25-29 años' },
+          { option: '3', text_option: '30-34 años' },
+          { option: '4', text_option: '35-39 años' },
+          { option: '5', text_option: '40-44 años' },
+          { option: '6', text_option: '45-49 años' },
+          { option: '7', text_option: '50-54 años' },
+          { option: '8', text_option: '55-59 años' },
+          { option: '9', text_option: '60-64 años' },
+          { option: '10', text_option: '65-69 años' },
+          { option: '11', text_option: '70-74 años' },
+          { option: '12', text_option: '75-79 años' },
+          { option: '13', text_option: '80+ años' }
         ],
         answer: ''
       },
       {
         question: 'Education',
         text_question: '¿Cuál es su nivel educativo más alto alcanzado?',
-        options: [
-          { option: '1', text_option: 'Sin estudios' },
-          { option: '2', text_option: 'Educación primaria' },
-          { option: '3', text_option: 'Educación secundaria' },
-          { option: '4', text_option: 'Educación universitaria' },
-          { option: '5', text_option: 'Postgrado' }
+        options:[
+          { option: '1', text_option: 'Nunca asistió a la escuela o solo kindergarten' },
+          { option: '2', text_option: 'Grados 1-8 (Primaria incompleta)' },
+          { option: '3', text_option: 'Grados 9-11 (Secundaria incompleta)' },
+          { option: '4', text_option: 'Graduado de Secundaria (o equivalente, como GED)' },
+          { option: '5', text_option: 'Alguna educación universitaria o técnica (sin título)' },
+          { option: '6', text_option: 'Graduado universitario (Licenciatura o superior)' }
         ],
         answer: ''
       },
@@ -96,11 +105,14 @@ function Predict() {
         question: 'Income',
         text_question: '¿Cuál es su nivel de ingresos mensuales?',
         options: [
-          { option: '1', text_option: 'Menos de $500' },
-          { option: '2', text_option: '$500 - $1000' },
-          { option: '3', text_option: '$1000 - $2000' },
-          { option: '4', text_option: '$2000 - $5000' },
-          { option: '5', text_option: 'Más de $5000' }
+          { option: '1', text_option: 'Menos de $10,000' },
+  { option: '2', text_option: '$10,000 - $14,999' },
+  { option: '3', text_option: '$15,000 - $19,999' },
+  { option: '4', text_option: '$20,000 - $24,999' },
+  { option: '5', text_option: '$25,000 - $34,999' },
+  { option: '6', text_option: '$35,000 - $49,999' },
+  { option: '7', text_option: '$50,000 - $74,999' },
+  { option: '8', text_option: '$75,000 o más' }
         ],
         answer: ''
       }
@@ -281,7 +293,7 @@ function Predict() {
                       onChange={() => { handleChangeSex( '0') }}
                       className="w-4 h-4"
                     />
-                    Hombre
+                    Mujer
                   </label>
                   <label className="flex items-center gap-2">
                     <input
@@ -292,7 +304,7 @@ function Predict() {
                       onChange={() => { handleChangeSex( '1') }}
                       className="w-4 h-4"
                     />
-                    Mujer
+                    Hombre
                   </label>
                 </div>
               </div>

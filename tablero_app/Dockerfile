@@ -6,9 +6,8 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
+RUN npm run build
+RUN npm install -g serve
 
-# Especifica el puerto como variable de entorno con un valor por defecto
-ENV PORT=3000
-ENV REACT_APP_API_URL=http://localhost:8000
 
-CMD ["npm", "start"]
+CMD ["serve", "-s", "build", "-l", "3000"]
