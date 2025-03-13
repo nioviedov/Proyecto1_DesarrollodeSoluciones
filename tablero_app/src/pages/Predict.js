@@ -7,7 +7,7 @@ import { getNivelDeRiesgo } from "../utils";
 function Predict() {
   // Estado para los inputs
   useEffect(() => {
-    fillQuestions()
+    //fillQuestions()
     
   }, []); // Se ejecuta solo una vez al montar el componente
   
@@ -180,9 +180,47 @@ function Predict() {
     res['MentHlth'] = formData.mentHlth.answer;
     return res;
   }
+
+  const valid_form = () =>{
+    let valid = true;
+    let res = {}
+    const dict_bin_questions = {'si':1,'no':0}
+    for(let i = 0;i<formData.binary_questions.length;i++){
+      if(formData.binary_questions[i].answer == ''){
+        return false
+      }
+    }
+    console.log('ll',formData.select_questions.length)
+    for(let i=0;i<formData.select_questions.length;i++){
+     if(formData.select_questions[i].answer == ''){
+      return false
+     }
+    }
+    //TOFO FALTA
+    if(formData.sex.answer == ""){
+      return false
+    }
+    if(formData.weight.answer == ""){
+      return false
+    }
+    if(formData.height.answer == ""){
+      return false
+    }
+    if(formData.physHlth.answer == ""){
+      return false
+    }
+    if(formData.mentHlth.answer == ""){
+      return false
+    }
+    return valid;
+  }
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Datos del formulario:", formData);
+    if(!valid_form()){
+      window.alert("Debes llenar todos los campos del formulario")
+      return
+    }
     let data = getData()
     axios.post(`${API_URL}/save_prediction?user_id=${localStorage.getItem('username')}`,data).then(res=>{
       console.log(res.data)
