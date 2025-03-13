@@ -145,7 +145,7 @@ def get_descriptive_data(storage:Storage,from_date,to_date):
         temp = {'type':'bar_chart','name':field,'data':[],'prediction_risks':prediction_risks,'names_to_show':names_to_show[index]}
         for index2,option in enumerate(options[index]):
             res_aux = {'name':option,'name_to_show':names_to_show[index][index2]}
-            print('-->',field,option)
+            # print('-->',field,option)
             for prediction in prediction_risks:
                 res_aux[prediction] = len(df[(df[field] == option) & (df['prediction_risk'] == prediction)])
             # print('field',field,type(aux),'aux',aux.to_dict())
