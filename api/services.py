@@ -25,16 +25,16 @@ def calculate_bmi(weight: float, height: float) -> float:
 
 def determinate_risk(p):
     p = float(p)
-    if p < .2:
-        return 0
-    elif p < .4:
+    if p < .07:
         return 1
-    elif p < .6:
+    elif p < .20:
         return 2
-    elif p < .8:
+    elif p < .35:
         return 3
-    else:
+    elif p < .90:
         return 4
+    else:
+        return 5
 
 def predict_service(input_data: PredictionInput, user_id: str, model: BaseEstimator) -> PredictionResponse:
     features = np.array([[
@@ -77,17 +77,63 @@ def save_prediction_service(user_id: str, input_data: PredictionInput, storage: 
 def get_predictions_service(user_id: str, storage: Storage):
     return storage.get_by_user(user_id)
 
-def get_descriptive_data(storage:Storage):
+def get_descriptive_data(storage:Storage,from_date,to_date):
     file_name = 'input_data.csv'
     df = pd.read_csv(file_name)
+    from_date = datetime.datetime.strptime(from_date, "%Y-%m-%d") if from_date else None
+    to_date = datetime.datetime.strptime(to_date, "%Y-%m-%d") if to_date else None
+    df['date'] = df['date'] = pd.to_datetime(df['date'])
+    if from_date:
+        df = df[df['date'] >= from_date]
+    if to_date:
+        df = df[df['date']<= to_date]
+
     binary_fields = ['HighBP','HighChol','CholCheck','Smoker','Stroke','HearthDiseaseOrAttack','PhysActivity',\
                      'Fruits','Veggies','HvyAlcoholConsump','AnyHealthcare','NoDocbcCost','DiffWalk','Sex']
     choice_fields = ['GenHlth','Age','Education','Income']
+    names_fields = ['', 'Presión arterial alta','Colesterol alto','Revisión de colesterol','Fuma','Derrame Cerebral','enfermedad coronaria o infarto','Actividad física en los últimos 30 dias',\
+                     'Consume frutas al menos una vez al día','Consume verduras al menos una vez al día','Consumo excesivo de alcohol','Tiene algún tipo de seguro','No pudo ver a un médico por costo en los últimos 12 meses','Dificultad grave para caminar o subir escaleras','Sexo','Estado general de salud ','Edad','Educación','Nivel de ingresos',\
+                        'Altura(m)','Peso(kg)','Indice de masa corporar','Días en los que la salud mental nofue buena en los últimos 30 días','Días en los que la salud física no fue buena en los últimos 30 días']
+    choice_fields = ['GenHlth','Age','Education','Income']
     fields = binary_fields + choice_fields
     histogram_fields = ['Height','Weight','BMI','MentHlth','PhysHlth']
-    options = [[0,1] for i in binary_fields] + [[0,1,2,3,4] for i in choice_fields]
-    names_to_show = [['No','Si'] for i in binary_fields] + [['Cat1','Cat2','Cat3','Cat4','Cat5'],['Cat1','Cat2','Cat3','Cat4','Cat5'],['Cat1','Cat2','Cat3','Cat4','Cat5'],['Cat1','Cat2','Cat3','Cat4','Cat5']]
-    prediction_risks = [0,1,2,3,4]
+    options = [[0,1] for i in binary_fields] + [[i +1 for i in range(5)]] + [[i +1 for i in range(13)]] + [[i +1 for i in range(6)]] + [[i +1 for i in range(8)]]  
+    names_to_show = [['No','Si'] if i != 'Sex' else ['Hombre','Mujer'] for i in binary_fields] + [
+        ['Excelente','Muy bueno','Bueno','Regular','Malo'],
+        [
+    "18-24 años",
+    "25-29 años",
+    "30-34 años",
+    "35-39 años",
+    "40-44 años",
+    "45-49 años",
+    "50-54 años",
+    "55-59 años",
+    "60-64 años",
+    "65-69 años",
+    "70-74 años",
+    "75-79 años",
+    "80+ años"
+],
+ [
+    "Nunca asistió a la escuela o solo kindergarten",
+    "Grados 1-8 (Primaria incompleta)",
+    "Grados 9-11 (Secundaria incompleta)",
+    "Graduado de Secundaria (o equivalente, como GED)",
+    "Alguna educación universitaria o técnica (sin título)",
+    "Graduado universitario (Licenciatura o superior)"
+],
+        [
+    "Menos de $10,000",
+    "$10,000 - $14,999",
+    "$15,000 - $19,999",
+    "$20,000 - $24,999",
+    "$25,000 - $34,999",
+    "$35,000 - $49,999",
+    "$50,000 - $74,999",
+    "$75,000 o más"
+]]
+    prediction_risks = [1,2,3,4,5]
     
     res = []
     temp = {'type':'total','total':None,'data':[]}
@@ -97,6 +143,7 @@ def get_descriptive_data(storage:Storage):
     res.append(temp)
     for index,field in enumerate(fields):
         temp = {'type':'bar_chart','name':field,'data':[],'prediction_risks':prediction_risks,'names_to_show':names_to_show[index]}
+        print('---',index,options,)
         for index2,option in enumerate(options[index]):
             res_aux = {'name':option,'name_to_show':names_to_show[index][index2]}
             for prediction in prediction_risks:
@@ -118,5 +165,10 @@ def get_descriptive_data(storage:Storage):
             temp['data'].append(res_aux)
         # print('\n\n>>',type(hist),hist.to_dict())
         res.append(temp)
+    
+    i = 0
+    while i< len(res):
+        res[i]['name_to_show'] = names_fields[i]
+        i+=1
     
     return res

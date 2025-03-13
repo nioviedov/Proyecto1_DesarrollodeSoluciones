@@ -23,8 +23,33 @@ class MyMLPClassifier():
     
     def predict(self,data):
         print('DATA',type(data),data)
-        prediction = self.model.predict(data)
-        print('PPP',prediction)
+#         data = [[	1.0,
+# 	1.0,
+# 	1.0,
+# 	27.0,
+# 	1.0,
+# 	0.0,
+# 	0.0,
+# 	1.0,
+# 	1.0,
+# 	0.0,
+# 	0.0,
+# 	1.0,
+# 	0.0,
+# 	3.0,
+# 	0.0,
+# 	0.0,
+# 	0.0,
+# 	1.0,
+# 	11.0,
+# 	5.0,
+# 	7.0,
+# ]]
+        print('CC',len(data))
+        prediction = self.model.predict_proba(data)
+        print('P2PP',prediction)
+
+        prediction = [prediction[0][1]]
         return prediction
 
 

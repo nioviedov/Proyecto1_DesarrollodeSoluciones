@@ -15,3 +15,25 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/* "#3cb24a", // Muy bajo (verde suave)
+  "#2f8f3e", // Bajo (verde-amarillento)
+  "#f7ec0c", // Alto (naranja suave)
+  "#f99023", // Medio (amarillo)
+  "#b9121a"  // Muy alto (rojo intenso)*/
+
+  .bg-level_risk_1{
+    background-color: #3cb24a;
+  }
+  .bg-level_risk_2{
+    background-color: #2f8f3e;
+  }
+  .bg-level_risk_3{
+    background-color: #f7ec0c;
+  }
+  .bg-level_risk_4{
+    background-color: #f99023;
+  }
+  .bg-level_risk_5{
+    background-color: #b9121a;
+  }
+  

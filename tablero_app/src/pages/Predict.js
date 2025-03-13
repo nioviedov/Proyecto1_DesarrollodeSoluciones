@@ -1,6 +1,7 @@
 import { useState,useEffect } from "react";
 import axios from "axios";
 import API_URL from "../environment"
+import { getNivelDeRiesgo } from "../utils";
 
 
 function Predict() {
@@ -130,10 +131,18 @@ function Predict() {
   })
   // Manejo de cambios en los inputs
   const handleChange = (e) => {
+    console.log('lloo',e.target)
     const { name, value, type, checked } = e.target;
+    console.log({ name, value, type, checked })
+    // setFormData((prev) => ({
+    //   ...prev,
+    //   [name]: type === "checkbox" ? checked : value,
+    // }));
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      select_questions: prev.select_questions.map((elem) =>
+        elem.question === name ? { ...elem, answer:value } : elem
+      ),
     }));
   };
 
@@ -228,6 +237,8 @@ function Predict() {
   }
 
   const getClassName = (percentage) => {
+    let level = getNivelDeRiesgo(percentage) // TODO CAMBIAR COLORES
+    return `bg-level_risk_${level}`
     console.log('dd', percentage)
     if (percentage < 0.3) {
       return 'bg-green-600'
@@ -240,22 +251,10 @@ function Predict() {
     }
   }
 
-  const getNivelDeRiesgo = (percentage) =>{
-    if(percentage < .20){
-      return 'Muy bajo'
-    }
-    else if(percentage < .40){
-      return 'Bajo'
-    }
-    else if(percentage < .60){
-      return 'Medio'
-    }
-    else if(percentage < .80){
-      return 'Alto'
-    }
-    else{
-      return 'Muy Alto'
-    }
+  const getNivelDeRiesgoTitle = (percentage) =>{
+    let level = getNivelDeRiesgo(percentage)
+    const dict_ = {1:'Muy Bajo',2:'Bajo',3:'Medio',4:'Alto',5:'Muy Alto'}
+    return dict_[level];
   }
 
 
@@ -405,7 +404,7 @@ function Predict() {
             <div className="flex flex-row justify-between w-full">
               <div className={`${getClassName(prediction.diabetes_percentage)} w-80 m-2 p-4`}>
 
-                <span>{getNivelDeRiesgo(prediction.diabetes_percentage)}</span>
+                <span>{getNivelDeRiesgoTitle(prediction.diabetes_percentage)}</span>
               </div>
               <span className="m-4">{prediction.diabetes_percentage * 100}%</span>
             </div>

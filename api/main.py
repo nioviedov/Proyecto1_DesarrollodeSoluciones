@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from storage import InMemoryStorage,CSVSotarge
 from models import PredictionInput, PredictionResponse
 from services import predict_service, save_prediction_service, get_predictions_service
@@ -42,8 +42,11 @@ def get_predictions(user_id: str):
     return get_predictions_service(user_id, storage)
 
 @app.get("/descriptive_data")
-def descriptive_data():
-    res = get_descriptive_data(storage)
+def descriptive_data(
+    from_date: str = Query(None, description="Fecha de inicio en formato YYYY-MM-DD"),
+    to_date: str = Query(None, description="Fecha de fin en formato YYYY-MM-DD")
+):
+    res = get_descriptive_data(storage,from_date,to_date)
     return jsonable_encoder(res)
 
 

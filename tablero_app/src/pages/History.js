@@ -1,27 +1,16 @@
 import { useState,useEffect } from "react";
 import axios from "axios";
 import API_URL from "../environment"
+import { getNivelDeRiesgo } from "../utils";
 
 
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
-const getNivelDeRiesgo = (percentage) =>{
-  if(percentage < .20){
-    return 'Muy bajo'
-  }
-  else if(percentage < .40){
-    return 'Bajo'
-  }
-  else if(percentage < .60){
-    return 'Medio'
-  }
-  else if(percentage < .80){
-    return 'Alto'
-  }
-  else{
-    return 'Muy Alto'
-  }
+const getNivelDeRiesgoTitle = (percentage) =>{
+  let level = getNivelDeRiesgo(percentage)
+      const dict_ = {1:'Muy Bajo',2:'Bajo',3:'Medio',4:'Alto',5:'Muy Alto'}
+      return dict_[level];
 }
 
 
@@ -114,11 +103,14 @@ function History() {
     res['Height'] = data['Height'] * 100;
     res['PhysHlth'] = data['PhysHlth'];
     res['MentHlth'] = data['MentHlth'];
-
+      res['date_time'] = data['date_time'];
       setAnswer(res)
     }
 
     const getClassName = (percentage) => {
+      // TODO CAMBIAR COLORES
+       let level = getNivelDeRiesgo(percentage) // TODO CAMBIAR COLORES
+    return `bg-level_risk_${level}`
       console.log('dd', percentage)
       if (percentage < 0.4) {
         return 'bg-green-600'
@@ -166,7 +158,7 @@ function History() {
                 {historicoData.map((item, index) => (
                   <tr key={index} className="border">
                     <td className="border p-2 text-center">{item.date}</td>
-                    <td className="border p-2 text-center">{getNivelDeRiesgo(item.prediction)}</td>
+                    <td className="border p-2 text-center">{getNivelDeRiesgoTitle(item.prediction)}</td>
                     <td className="border p-2 text-center">
                       <a onClick={()=>{setPredictionItem(item.id)}}  href={item.link} className="text-blue-500 hover:underline">
                         Ver detalle
@@ -208,12 +200,13 @@ function History() {
       <div className="flex flex-col w-full ">
         <div className="flex flex-row justify-between w-full">
           <div className={`${getClassName(prediction.prediction_percentage)} w-80 m-2 p-4`}>
-          <span>{getNivelDeRiesgo(prediction.prediction_percentage)}</span>
+          <span>{getNivelDeRiesgoTitle(prediction.prediction_percentage)}</span>
 
           </div>
           <span className="m-4">{prediction.prediction_percentage * 100}%</span>
         </div>
         <div>
+          <p><strong>Fecha y Hora</strong> {answer.date_time} </p>
         <p><strong>Sexo</strong> {answer.Sex}</p>
         <p><strong>Peso (kg)</strong> {answer.Weight}</p>
         <p><strong>Altura (cm)</strong> {answer.Height}</p>

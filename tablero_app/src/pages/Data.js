@@ -8,11 +8,11 @@ const data = [
   { name: "Total", value1: 10, value2: 20, value3: 15, value4: 25, value5: 30 }
 ];
 const colors =[
-  "#90EE90", // Muy bajo (verde suave)
-  "#ADFF2F", // Bajo (verde-amarillento)
-  "#e5be01", // Medio (amarillo)
-  "#FFA500", // Alto (naranja suave)
-  "#FF0000"  // Muy alto (rojo intenso)
+  "#3cb24a", // Muy bajo (verde suave)
+  "#2f8f3e", // Bajo (verde-amarillento)
+  "#f7ec0c", // Alto (naranja suave)
+  "#f99023", // Medio (amarillo)
+  "#b9121a"  // Muy alto (rojo intenso)
 ]
 const riegos = [
   'Muy Bajo',
@@ -129,7 +129,7 @@ const riegos = [
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
     {dataList.filter(e=>e.type === 'bar_chart').map((item, index) => (
       <div key={index} className="bg-white shadow-lg rounded-lg p-4">
-        <h2 className="text-lg font-semibold mb-2">{item.name}</h2>
+        <h2 className="text-lg font-semibold mb-2">{item.name_to_show}</h2>
         <ResponsiveContainer width="100%" height={250}>
         <BarChart
           width={500}
