@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  api:
+    build: ./api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api/input_data.csv:/app/input_data.csv
+    environment:
+      - PORT=8000
+  
+  tablero_app:
+    build: ./tablero_app
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    volumes:
+      - /app/node_modules  # Evita que node_modules de tu host sobrescriba el del contenedor
+

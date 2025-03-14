@@ -1,0 +1,3 @@
+UserID,HighBP,HighChol,CholCheck,Smoker,Stroke,HearthDiseaseOrAttack,PhysActivity,Fruits,Veggies,HvyAlcoholConsump,AnyHealthcare,NoDocbcCost,DiffWalk,GenHlth,Age,Education,Income,Sex,Weight,Height,MentHlth,PhysHlth,user_id,prediction,BMI,prediction_risk,date,date_time
+fdfed,0,0,1,0,0,0,0,1,1,0,1,0,0,1,1,1,1,0,70,1.75,1,1,fdfed,1.0,22.86,4,2025-03-12,2025-03-12 18:49:25.422733
+fdfed,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,70,1.75,1,1,fdfed,1.0,22.86,4,2025-03-12,2025-03-12 18:49:57.471577
