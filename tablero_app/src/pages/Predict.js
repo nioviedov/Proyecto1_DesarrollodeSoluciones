@@ -7,23 +7,45 @@ import { getNivelDeRiesgo } from "../utils";
 function Predict() {
   // Estado para los inputs
   useEffect(() => {
-    //fillQuestions()
+    // fillQuestionsCase1()
     
   }, []); // Se ejecuta solo una vez al montar el componente
   
-  const fillQuestions = ()=>{
+  const fillQuestionsCase1 = ()=>{
     setFormData((prev) => ({
       ...prev,
-      sex:{...prev.sex,answer:'0'},
-      weight:{...prev.weight,answer:'70'},
+      sex:{...prev.sex,answer:'1'},
+      weight:{...prev.weight,answer:'85'},
       height:{...prev.height,answer:'175'},
-      mentHlth:{...prev.mentHlth,answer:'1'},
-      physHlth:{...prev.physHlth,answer:'1'},
-      select_questions:prev.select_questions.map((elem) =>
-      ({...elem,answer:'1'})
+      mentHlth:{...prev.mentHlth,answer:'0'},
+      physHlth:{...prev.physHlth,answer:'0'},
+      select_questions:prev.select_questions.map((elem,index) =>{
+        if(index == 0){
+          return {...elem,answer:'3'}
+        }
+        if(index == 1){
+          return {...elem,answer:'11'}
+        }
+        if(index == 2){
+          return {...elem,answer:'5'}
+        }
+        else{
+          return {...elem,answer:'7'}
+        }
+      }
     ),
-      binary_questions: prev.binary_questions.map((elem) =>
-         ({ ...elem, answer:'no' })
+      binary_questions: prev.binary_questions.map((elem,index) =>{
+        if(index == 0 || index == 1 || index==2 || index  == 3 || index == 6 || index == 7 || index == 10){
+          
+          return {...elem,answer:'si'}
+        }
+        else{
+          return {...elem,answer:'no'}
+
+        }
+      }
+        
+         
       ),
     }));
     
@@ -250,6 +272,14 @@ function Predict() {
   }
 
   const getRecommendation = (percentage) => {
+    let dict = {
+      1:'Tu riesgo de diabetes es muy bajo. Mantén un estilo de vida saludable',
+      2:'Tu riesgo de diabetes es bajo. Continúa con hábitos saludables y revisa tu estado de salud periódicamente.',
+      3:'Tu riesgo de diabetes es medio. Considera mejorar tu alimentación y aumentar la actividad física',
+      4:'Tu riesgo de diabetes es alto. Es recomendable hacer chequeos médicos y mejorar tu estilo de vida.',
+      5:'Tu riesgo de diabetes es muy alto. Consulta con un médico lo antes posible.'
+    }
+    return dict[getNivelDeRiesgo(percentage)]
     if (percentage < 0.2) {
       return "Tu riesgo de diabetes es muy bajo. Mantén un estilo de vida saludable.";
     } else if (percentage < 0.4) {
@@ -436,11 +466,18 @@ function Predict() {
                 Predecir
               </button>
               <button
-                // type="submit"
+                type="button"
                 className="bg-blue-600 ml-2 text-white p-3 rounded-lg hover:bg-blue-700 transition"
                 onClick={ClearQuestions}
               >
                 Limpiar
+              </button>
+              <button
+                type="button"
+                className="bg-blue-600 ml-2 text-white p-3 rounded-lg hover:bg-blue-700 transition"
+                onClick={fillQuestionsCase1}
+              >
+                Caso1
               </button>
             </div>
           </form>
