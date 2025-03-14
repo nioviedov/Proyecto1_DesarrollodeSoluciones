@@ -7,7 +7,7 @@ import { getNivelDeRiesgo } from "../utils";
 function Predict() {
   // Estado para los inputs
   useEffect(() => {
-    fillQuestionsCase3()
+    // fillQuestionsCase3()
     
   }, []); // Se ejecuta solo una vez al montar el componente
   
