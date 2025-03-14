@@ -47,7 +47,7 @@ class MyMLPClassifier():
 # ]]
         prediction = self.model.predict_proba(data)
 
-        prediction = [prediction[0][1]]
+        prediction = [round(prediction[0][1],4)]
         return prediction
 
 

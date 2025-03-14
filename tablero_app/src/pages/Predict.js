@@ -7,7 +7,7 @@ import { getNivelDeRiesgo } from "../utils";
 function Predict() {
   // Estado para los inputs
   useEffect(() => {
-    // fillQuestionsCase1()
+    fillQuestionsCase3()
     
   }, []); // Se ejecuta solo una vez al montar el componente
   
@@ -36,6 +36,85 @@ function Predict() {
     ),
       binary_questions: prev.binary_questions.map((elem,index) =>{
         if(index == 0 || index == 1 || index==2 || index  == 3 || index == 6 || index == 7 || index == 10){
+          
+          return {...elem,answer:'si'}
+        }
+        else{
+          return {...elem,answer:'no'}
+
+        }
+      }
+        
+         
+      ),
+    }));
+    
+  }
+  const fillQuestionsCase2 = ()=>{
+    setFormData((prev) => ({
+      ...prev,
+      sex:{...prev.sex,answer:'1'},
+      weight:{...prev.weight,answer:'68'},
+      height:{...prev.height,answer:'175'},
+      mentHlth:{...prev.mentHlth,answer:'0'},
+      physHlth:{...prev.physHlth,answer:'0'},
+      select_questions:prev.select_questions.map((elem,index) =>{
+        if(index == 0){
+          return {...elem,answer:'1'}
+        }
+        if(index == 1){
+          return {...elem,answer:'11'}
+        }
+        if(index == 2){
+          return {...elem,answer:'5'}
+        }
+        else{
+          return {...elem,answer:'7'}
+        }
+      }
+    ),
+      binary_questions: prev.binary_questions.map((elem,index) =>{
+        if(index == 0 || index == 1 || index==2 || index  == 3  || index==6  || index == 7  || index == 8 || index == 10){
+          
+          return {...elem,answer:'si'}
+        }
+        else{
+          return {...elem,answer:'no'}
+
+        }
+      }
+        
+         
+      ),
+    }));
+    
+  }
+
+  const fillQuestionsCase3 = ()=>{
+    setFormData((prev) => ({
+      ...prev,
+      sex:{...prev.sex,answer:'1'},
+      weight:{...prev.weight,answer:'70'},
+      height:{...prev.height,answer:'170'},
+      mentHlth:{...prev.mentHlth,answer:'0'},
+      physHlth:{...prev.physHlth,answer:'0'},
+      select_questions:prev.select_questions.map((elem,index) =>{
+        if(index == 0){
+          return {...elem,answer:'2'}
+        }
+        if(index == 1){
+          return {...elem,answer:'4'}
+        }
+        if(index == 2){
+          return {...elem,answer:'6'}
+        }
+        else{
+          return {...elem,answer:'8'}
+        }
+      }
+    ),
+      binary_questions: prev.binary_questions.map((elem,index) =>{
+        if( index==2  || index==6  || index == 7  || index == 8 || index == 10){
           
           return {...elem,answer:'si'}
         }
@@ -479,6 +558,20 @@ function Predict() {
               >
                 Caso1
               </button>
+              <button
+                type="button"
+                className="bg-blue-600 ml-2 text-white p-3 rounded-lg hover:bg-blue-700 transition"
+                onClick={fillQuestionsCase2}
+              >
+                Caso2
+              </button>
+              <button
+                type="button"
+                className="bg-blue-600 ml-2 text-white p-3 rounded-lg hover:bg-blue-700 transition"
+                onClick={fillQuestionsCase3}
+              >
+                Caso3
+              </button>
             </div>
           </form>
         </div>
@@ -493,7 +586,7 @@ function Predict() {
 
                 <span>{getNivelDeRiesgoTitle(prediction.diabetes_percentage)}</span>
               </div>
-              <span className="m-4">{prediction.diabetes_percentage * 100}%</span>
+              <span className="m-4">{(prediction.diabetes_percentage * 100).toFixed(2)}%</span>
             </div>
             <div className="mt-4 p-4 bg-blue-100 border border-blue-500 text-blue-700 rounded-lg">
           <p>{getRecommendation(prediction.diabetes_percentage)}</p>

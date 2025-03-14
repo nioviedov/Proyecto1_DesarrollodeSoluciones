@@ -203,7 +203,7 @@ function History() {
           <span>{getNivelDeRiesgoTitle(prediction.prediction_percentage)}</span>
 
           </div>
-          <span className="m-4">{prediction.prediction_percentage * 100}%</span>
+          <span className="m-4">{(prediction.prediction_percentage * 100).toFixed(2)}%</span>
         </div>
         <div>
           <p><strong>Fecha y Hora</strong> {answer.date_time} </p>
